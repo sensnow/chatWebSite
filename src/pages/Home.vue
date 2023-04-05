@@ -44,9 +44,9 @@ export default {
 
 .left {
   width: 16%;
-  height: 85%;
+  height: 80%;
   overflow: hidden;
-  margin: 15px 15px 15px 100px;
+  margin: 15px 30px 15px 100px;
   border-radius: 10px;
   display: flex;
   justify-content: center;
@@ -56,7 +56,7 @@ export default {
 .right
 {
   width: 70%;
-  height: 85%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
