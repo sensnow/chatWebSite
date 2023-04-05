@@ -1,12 +1,19 @@
 <template>
   <div class="main">
-
+    <vue-scroll>
+      <h1 v-for="n in 100" :key="n">{{n}}</h1>
+    </vue-scroll>
   </div>
 </template>
 
 <script>
 export default {
-  name: "message-box"
+  name: "message-box",
+  vuescroll:{
+    mode: 'native',
+    locking: true,
+    detectResize: true,
+  }
 }
 </script>
 

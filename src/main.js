@@ -6,11 +6,14 @@ import App from './App.vue'
 import router from "@/router";
 import Vuex from 'vuex'
 import store from './store'
+import vuescroll from "vuescroll";
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
+Vue.use(vuescroll)
+
 new Vue({
   render: h => h(App),
   router: router,
