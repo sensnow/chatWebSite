@@ -1,24 +1,29 @@
 <template>
     <div :class="bubbleClass">
-        <p>{{ message.text }}</p>
+          <markdown-it-vue class="md-body" :content="message" />
     </div>
 </template>
 
 <script>
+import MarkdownItVue from 'markdown-it-vue'
+import 'markdown-it-vue/dist/markdown-it-vue-light.css'
 export default {
+  components: {
+    MarkdownItVue,
+  },
     props: {
         message: {
-            type: Object,
+            type: String,
             required: true,
         },
-        fromUser: {
-            type: Boolean,
-            default: false,
+        role: {
+            type: String,
+            required: true
         },
     },
     computed: {
         bubbleClass() {
-            return this.fromUser ? 'user-bubble' : 'bot-bubble';
+            return this.role ==='user' ? 'user-bubble' : 'bot-bubble';
         },
     },
 }
@@ -26,15 +31,21 @@ export default {
 
 <style scoped>
 .user-bubble {
-    background-color: #2351e3;
-    color: white;
+    display: block;
+    background-color: #00BFFF;
+    color: red;
     text-align: right;
+    align-self: flex-end;
+    max-width: 70%;
+    border: 1px solid #e6e6e6;
 }
 
 .bot-bubble {
-    background-color: #f8f9fc;
-    color: #3a3b45;
+    background-color: #ffffff;
     text-align: left;
+    align-self: flex-start;
+    max-width: 70%;
+    border: 1px solid #e6e6e6;
 }
 
 </style>

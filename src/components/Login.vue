@@ -39,7 +39,8 @@
 <script>
 // import { login } from "@/api/login";
 // import { setToken } from "@/request/auth";
-import axios  from "axios";
+import axios from "axios";
+
 const Base64 = require("js-base64").Base64
 export default {
 
@@ -116,7 +117,10 @@ export default {
                 }
               })
               .catch((err) => {
-                console.log(err);
+                this.$message({
+                  message: "无法连接至服务器",
+                  type: "error",
+                });
               });
         } else {
           this.$message({

@@ -2,7 +2,6 @@
   <div class="big">
     <div class="left">
         <LeftBox></LeftBox>
-
     </div>
     <div class="right">
       <Message />
@@ -24,6 +23,9 @@ export default {
     LeftBox,
     Message,
     SendMessage
+  },
+  mounted() {
+
   }
 }
 </script>

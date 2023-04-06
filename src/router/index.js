@@ -1,7 +1,9 @@
 import VueRouter from "vue-router";
+import axios from "axios";
+import Vue from "vue";
 
 
-export default new VueRouter({
+export const router =  new VueRouter({
     mode: 'history',
     routes: [
         {
@@ -21,9 +23,30 @@ export default new VueRouter({
         },
         {
             path: '/home',
-            component:() => import('../pages/Home.vue')
+            component: () => import('../pages/Home.vue')
 
         }
     ]
 
 })
+router.beforeEach((to, from, next) => {
+    if (to.path === '/login' || to.path === '/register') {
+        next();
+    } else {
+        axios.get('/api/user/info').then((res) => {
+            if (res.data.data !== null) {
+                next();
+            } else {
+                console.log('未登录')
+                let that = Vue.prototype;
+                next('/login');
+                that.$message.error({
+                    message: '请先登录',
+                    type: 'error'
+                })
+            }
+        }).catch((err) => {
+            next('/login');
+        })
+    }
+});

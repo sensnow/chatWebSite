@@ -1,21 +1,54 @@
 <template>
-    <el-form class="main">
-            <el-input class="input-box" v-model="content">
+    <el-form class="main" :rules="rules" @submit.native.prevent>
+            <el-input v-loading="sendingMessage" :disabled="sendingMessage" prop="content" class="input-box" @keyup.enter.native.prevent="send" v-model="content" >
             </el-input>
-            <el-button class="submit_btn" icon="el-icon-position"/>
+            <el-button class="submit_btn" icon="el-icon-position" @click.native.prevent="send"/>
     </el-form>
 </template>
 
 <script>
-
+import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import Vue from "vue";
 
 export default {
     name: "send-message",
     data() {
         return {
-            content: ""
+            content: "",
+            rules:{
+                content: [
+                    { required: true, message: "请输入内容", trigger: "blur" },
+                ],
+            }
+        }
+    },
+    computed:{
+       ...mapState(['searchId','newChat','sendingMessage'])
+    },
+    methods: {
+        ...mapActions(['sendMessage']),
+        send() {
+          console.log(this.newChat)
+            if(this.searchId === ''&& !this.newChat)
+            {
+                this.$message({
+                    message: '请先选择或创建一个对话',
+                    type: 'warning'
+                });
+                return
+            }
+            this.$store.commit('storeSendingMessage',true);
+            this.sendMessage({
+              searchId: this.searchId,
+              messages:{
+                content: this.content,
+                role: "user"
+              }
+            })
+            this.content = ''
         }
     }
+
 }
 </script>
 
@@ -46,5 +79,7 @@ export default {
     display: block;
     width:5%;
 }
+
+
 
 </style>

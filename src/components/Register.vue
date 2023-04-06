@@ -135,10 +135,18 @@ export default {
                 type: 'error'
               });
             }
-          })
+          }).catch(err => {
+            this.$message({
+              message: '无法连接至服务器',
+              type: 'error'
+            });
+          });
           this.loading = false;
         } else {
-          console.log('error submit!!');
+          this.$message({
+            message: '请检查输入',
+            type: 'error'
+          });
           return false;
         }
       });

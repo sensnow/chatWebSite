@@ -1,17 +1,6 @@
 <template>
     <div id="app">
-        <div class="chat-window">
-            <ChatBubble
-                v-for="(msg,index) in messages"
-                :key="index"
-                :message="msg"
-                :from-user="msg.fromUser"
-            />
-        </div>
-        <form @submit="sendMessage" class="input-container">
-            <input type="text" v-model="userInput" :disabled="sendDisabled"/>
-            <button type="submit" :disabled="sendDisabled">发送</button>
-        </form>
+
     </div>
 
 </template>
@@ -34,41 +23,7 @@ export default {
         }
     },
     methods: {
-        async sendMessage(e) {
-            e.preventDefault();
-            if (!this.userInput) return;
 
-            const userMessage = {
-                text: this.userInput,
-                fromUser: true,
-            };
-            this.messages.push(userMessage)
-            this.userInput = "";
-            this.sendDisabled = true;
-            setTimeout(() => {
-                this.sendDisabled = false;
-            }, 3000);
-
-            const response = await this.fetchResponse(userMessage.text);
-            const botMessage = {
-                text: response,
-                fromUser: false,
-            };
-            botMessage.text = botMessage.text.replace("\n", "");
-            this.messages.push(botMessage);
-        },
-
-
-        async fetchResponse(message) {
-            this.prompt.push({"role": "user", "content": message});
-            // let serHost = "/chat";
-            // const apiClient = axios.create({
-            //     // 在服务器启动时设置为服务器ip地址
-            //     baseURL: process.env.VUE_APP_SERVER_IP,
-            // });
-            const response = await axios.post('http://' + process.env.VUE_APP_SERVER_IP + ":8081/chat", this.prompt);
-            console.log(response)
-        },
     }
 }
 </script>
