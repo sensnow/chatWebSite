@@ -1,8 +1,7 @@
 <template>
-    <el-form class="main" :rules="rules" @submit.native.prevent>
-            <el-input v-loading="sendingMessage" :disabled="sendingMessage" prop="content" class="input-box" @keyup.enter.native.prevent="send" v-model="content" >
-            </el-input>
-            <el-button class="submit_btn" icon="el-icon-position" @click.native.prevent="send"/>
+    <el-form @submit="send" class="main" :rules="rules" @submit.n.native.prevent @keyup.enter="send">
+            <el-input type="text" v-loading="sendingMessage" :disabled="sendingMessage" prop="content" class="input-box" v-model="content" />
+            <el-button native-type="submit" class="submit_btn" icon="el-icon-position" @click="send" />
     </el-form>
 </template>
 
@@ -28,6 +27,14 @@ export default {
     methods: {
         ...mapActions(['sendMessage']),
         send() {
+            if(this.content == null || this.content == '')
+            {
+                this.$message({
+                    message: '请输入内容',
+                    type: 'warning'
+                });
+                return
+            }
           console.log(this.newChat)
             if(this.searchId === ''&& !this.newChat)
             {
