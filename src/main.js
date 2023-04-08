@@ -7,7 +7,7 @@ import {router} from "@/router";
 import Vuex from 'vuex'
 import store from './store'
 import vuescroll from "vuescroll";
-import vuetify from './plugins/vuetify'
+import vuetify from 'vuetify'
 import VueVirtualScroller from 'vue-virtual-scroller'
 Vue.config.productionTip = false
 import { Message } from 'element-ui'

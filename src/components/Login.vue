@@ -92,6 +92,9 @@ export default {
       this.$refs[form].validate(async (valid) => {
         if (valid) {
           this.loading = true;
+          setTimeout(() => {
+            this.loading = false;
+          }, 3000);
           await axios
               .post("/api/user/login", {
                 userName: this.form.username,

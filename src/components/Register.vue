@@ -115,9 +115,13 @@ export default {
       this.$refs[form].validate(async (valid) => {
         if (valid) {
           this.loading = true;
+          setTimeout(() => {
+            this.loading = false;
+          }, 3000);
           await axios.post("/api/user/register",{
             userName: this.form.username,
             password: this.form.password,
+            checkPassword: this.form.checkPassword,
           }).then(res => {
             if (res.data.code === 200) {
               this.$message({
