@@ -49,6 +49,7 @@ const actions = {
         }).then((res) => {
             context.commit('storeMessages', res.data.data)
             context.commit('storeMessageloading', false)
+
         }).catch((err) => {
             this.state.that.$message.error({
                 message: '获取对话失败',
@@ -93,6 +94,7 @@ const actions = {
                     if(eventData === "data: [DONE]"){
                         socket.close();
                     }else {
+                        this.state.downMarkdown = true;
                         let MsgData = eventData;
                         if(MsgData.indexOf('data: ') !== -1){
                             MsgData = MsgData.split('data: ')[1];
@@ -131,7 +133,7 @@ const actions = {
                     }).then((res) => {
                         // 关闭加载条
                         context.commit('storeSendingMessage', false)
-
+                        this.$store.state.downMarkdown = false;
                     }).catch((err) => {
                         this.state.that.$message.error({
                             message: '网络错误',
@@ -211,7 +213,8 @@ const state = {
     newChat: false,
     messageloading: false,
     sendingMessage: false,
-    that: ''
+    that: '',
+    downMarkdown: false, // 接收数据时，下滑到最底部
 }
 
 const getters = {

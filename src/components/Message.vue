@@ -42,16 +42,19 @@ export default {
 
   name: "message-box",
   computed: {
-    ...mapState(['messages','messageloading']),
+    ...mapState(['messages','messageloading','downMarkdown']),
   },
   methods:{
     handleResize() {
       this.$nextTick(() => {
-        this.$refs.vs.scrollTo({
-          y: 10000000
-        },
-         1000
-        )
+        if(this.$store.state.downMarkdown===true)
+        {
+          this.$refs.vs.scrollTo({
+                y: 10000000
+              },
+              1000
+          )
+        }
       })
     },
 

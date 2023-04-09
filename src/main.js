@@ -13,11 +13,13 @@ Vue.config.productionTip = false
 import { Message } from 'element-ui'
 import axios from "axios";
 import Vuetify from "@/plugins/vuetify";
+import VueClipboard from 'vue-clipboard2';
 Vue.use(VueVirtualScroller)
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(vuescroll)
+Vue.use(VueClipboard);
 
 axios.defaults.baseURL = process.env.BASE_URL;
 axios.defaults.timeout = 30000;
