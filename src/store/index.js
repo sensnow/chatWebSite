@@ -3,6 +3,7 @@ import Vue from 'vue'
 //引入Vuex
 import Vuex from 'vuex'
 import axios from "axios";
+import message from "@/components/Message.vue";
 
 //应用Vuex插件
 Vue.use(Vuex)
@@ -64,63 +65,83 @@ const actions = {
     async sendMessage(context, value) {
 
         if(this.state.newChat){
-            if(this.state.newChat){
-                await axios.get('/api/chat').then((res) => {
-                    context.commit('changeSearchId',res.data.data)
-                    context.commit('storeMessages', [])
-                    value.searchId = this.state.searchId;
-                }).catch((err) => {
-                    this.state.that.$message.error({
-                        message: '获取对话失败',
-                        type: 'error'
-                    })
+            await axios.get('/api/chat').then((res) => {
+                context.commit('changeSearchId',res.data.data)
+                context.commit('storeMessages', [])
+                value.searchId = this.state.searchId;
+            }).catch((err) => {
+                this.state.that.$message.error({
+                    message: '获取对话失败',
+                    type: 'error'
                 })
-            }
-        }
-        context.commit('addMessage', value.messages);
-        const data = {
-            searchId: this.$store.state.searchId,
-            messages: this.$store.state.messages
-        }
-        await axios.post('/api/ws/connect',  { data: 'Hello WebSocket!' }).then(async res=>{
-            const socket = new WebSocket("ws://localhost:8088/api/ws/connect");
-            socket.addEventListener('open', event =>  {
-                socket.send(JSON.stringify(data));
-            });
-            this.state.that.$message.success({
-                message: '发送消息成功',
-                type: 'success'
             })
-            let flag = 0;
-            socket.addEventListener('message', event => {
-                const data = event.data;
-                if(data === "[DONE]") {
-                    socket.close();
-                }else
-                {
-                    if(flag === 0){
-                        const message = {
-                            content: data.content,
-                            role: data.role,
+        }
+        context.commit('addMessage', value.message);
+
+        console.log(value);
+        console.log(this.state)
+        const chat_msg = new Object({
+            searchId: value.searchId,
+            messages: this.state.messages,
+        })
+
+        const chatMsg = JSON.stringify(chat_msg)
+
+        console.log(chatMsg);
+        axios.post('/api/ws/connect', { data: 'Hello WebSocket!' })
+            .then(response => {
+                const socket = new WebSocket('ws://localhost:8088/ws?sessionId=' + response.data.data)
+                socket.addEventListener('open', () => {
+                    socket.send(chatMsg);
+                    console.log(socket);
+                    console.log('WebSocket connected')
+                });
+                let flag = 0;
+                let role = '';
+                let content = '';
+                socket.addEventListener('message', event => {
+                    const eventData = event.data;
+                    if(eventData === "data: [DONE]"){
+                        socket.close();
+                    }else {
+                        let MsgData = eventData;
+                        if(MsgData.indexOf('data: ') !== -1){
+                            MsgData = MsgData.split('data: ')[1];
+                            let message = JSON.parse(MsgData);
+                            let choice = message.choices[0];
+                            let delta = choice.delta;
+                            // console.log(choice);
+                            let finish_reason = choice.finish_reason;
+                            if(role === ''){
+                                console.log(delta)
+                                role = delta.role;
+                            }else if (role !== ''){
+                                content = delta.content;
+                                message = new Object({
+                                    content: content,
+                                    role: role,
+                                })
+                                if(flag++ === 0){
+                                    this.state.messages.push(message);
+                                }else {
+                                    if(message.content !== undefined){
+                                        this.state.messages[this.state.messages.length - 1].content+=message.content;
+                                    }
+                                }
+                                console.log(message);
+                            }
                         }
-                        this.$store.state.messages.push(message);
+
                     }
-                    this.$set(this.$store.state.messages[this.$store.state.messages.length-1],'content' , ''+this.$store.state.messages[this.$store.state.messages.length-1]+data.content);
+                });
+                socket.onclose = function (event) {
+                    console.log('WebSocket closed')
                 }
             })
-            context.commit('addMessage', res.data.data)
-            if(this.state.newChat){
-                const response = await axios.get('/api/chat/conversationlist');
-                context.commit('storeConversationlist', response.data.data);
-            }
-            context.commit('storeNewChat', false)
-            context.commit('storeSendingMessage',false)
-        }).catch((err) => {
-            this.state.that.$message.error({
-                message: '发送消息失败',
-                type: 'error'
-            })
-        })
+            .catch(error => {
+                console.error(error)
+            });
+
     },
     async deleteAllConversation(context) {
         await axios.delete('/api/chat/allconversation').then(async (res) => {
