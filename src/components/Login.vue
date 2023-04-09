@@ -4,17 +4,17 @@
       <el-form ref="form" :model="form" :rules="rules">
         <el-form-item prop="username">
           <el-input
-              v-model="form.username"
-              clearable
-              placeholder="请输入账号"
+                  v-model="form.username"
+                  clearable
+                  placeholder="请输入账号"
           ></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input
-              v-model="form.password"
-              clearable
-              placeholder="请输入密码"
-              show-password
+                  v-model="form.password"
+                  clearable
+                  placeholder="请输入密码"
+                  show-password
           ></el-input>
         </el-form-item>
       </el-form>
@@ -22,7 +22,8 @@
     <div class="tool">
       <div>
         <el-checkbox v-model="checked" @change="remember"
-        >记住密码</el-checkbox
+        >记住密码
+        </el-checkbox
         >
       </div>
       <div>
@@ -30,8 +31,10 @@
       </div>
     </div>
     <div class="butt">
-      <el-button  :loading="loading" :disabled="loading"  type="primary" style="width: 40%" @click.native.prevent="login('form')"
-      >登录</el-button>
+      <el-button :loading="loading" :disabled="loading" type="primary" style="width: 40%"
+                 @click.native.prevent="login('form')"
+      >登录
+      </el-button>
     </div>
   </div>
 </template>
@@ -56,12 +59,12 @@ export default {
       checked: false,
       rules: {
         username: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
-          { max: 10, message: "不能大于10个字符", trigger: "blur" },
+          {required: true, message: "请输入用户名", trigger: "blur"},
+          {max: 10, message: "不能大于10个字符", trigger: "blur"},
         ],
         password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { max: 10, message: "不能大于10个字符", trigger: "blur" },
+          {required: true, message: "请输入密码", trigger: "blur"},
+          {max: 20, message: "不能大于20个字符", trigger: "blur"},
         ],
       },
     };
@@ -76,7 +79,7 @@ export default {
   },
   methods: {
 
-    remember(){
+    remember() {
       if (this.checked) {
         let password = Base64.encode(this.form.password); // base64加密
         localStorage.setItem("username", this.form.username);
@@ -86,8 +89,7 @@ export default {
         localStorage.removeItem("password");
       }
     },
-    async login(form)
-    {
+    async login(form) {
       // 检验
       this.$refs[form].validate(async (valid) => {
         if (valid) {
@@ -95,11 +97,10 @@ export default {
           setTimeout(() => {
             this.loading = false;
           }, 3000);
-          await axios
-              .post("/api/user/login", {
-                userName: this.form.username,
-                password: this.form.password,
-              })
+          await axios.post("/api/user/login", {
+            userName: this.form.username,
+            password: this.form.password,
+          })
               .then((res) => {
                 this.loading = false;
                 if (res.data.code === 200) {
@@ -135,9 +136,9 @@ export default {
     },
     noAccount() {
       this.$router.push(
-        {
-          path: "/user/register",
-        }
+          {
+            path: "/user/register",
+          }
       )
     },
   },
@@ -146,53 +147,53 @@ export default {
 
 <style scoped>
 .loginbody {
-  width: 100%;
-  height: 100%;
-  min-width: 1000px;
-  background-image: url(../assets/landscape.jpg);
-  background-size: 100% 100%;
-  background-position: center center;
-  overflow: auto;
-  background-repeat: no-repeat;
-  position: fixed;
-  line-height: 100%;
-  padding-top: 150px;
-  margin: 0;
+    width: 100%;
+    height: 100%;
+    min-width: 1000px;
+    background-image: url(../assets/landscape.jpg);
+    background-size: 100% 100%;
+    background-position: center center;
+    overflow: auto;
+    background-repeat: no-repeat;
+    position: fixed;
+    line-height: 100%;
+    padding-top: 150px;
+    margin: 0;
 }
 
 .logintext {
-  margin-bottom: 20px;
-  line-height: 50px;
-  text-align: center;
-  font-size: 30px;
-  font-weight: bolder;
-  color: white;
-  text-shadow: 2px 2px 4px #000000;
+    margin-bottom: 20px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bolder;
+    color: white;
+    text-shadow: 2px 2px 4px #000000;
 }
 
 .logindata {
-  width: 400px;
-  height: 300px;
-  transform: translate(-50%);
-  margin-left: 50%;
+    width: 400px;
+    height: 300px;
+    transform: translate(-50%);
+    margin-left: 50%;
 }
 
 .tool {
-  display: flex;
-  justify-content: space-between;
-  color: #606266;
+    display: flex;
+    justify-content: space-between;
+    color: #606266;
 }
 
 .butt {
-  margin-top: 10px;
-  text-align: center;
+    margin-top: 10px;
+    text-align: center;
 
 }
 
 .shou {
-  cursor: pointer;
-  color: #606266;
-  font-size: 11px;
+    cursor: pointer;
+    color: #606266;
+    font-size: 11px;
 }
 
 
