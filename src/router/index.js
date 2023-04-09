@@ -37,7 +37,6 @@ router.beforeEach((to, from, next) => {
             if (res.data.code === 200) {
                 next();
             } else {
-                console.log('未登录')
                 let that = Vue.prototype;
                 next('/user/login');
                 that.$message.error({

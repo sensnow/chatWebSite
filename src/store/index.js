@@ -10,11 +10,7 @@ Vue.use(Vuex)
 
 //准备actions——用于响应组件中的动作
 const actions = {
-    /* jia(context,value){
-        console.log('actions中的jia被调用了')
-        context.commit('JIA',value)
-    },
-    */
+
     // 请求列表数据数据
     async getConversationlist(context)
     {
@@ -77,24 +73,17 @@ const actions = {
             })
         }
         context.commit('addMessage', value.message);
-
-        console.log(value);
-        console.log(this.state)
         const chat_msg = new Object({
             searchId: value.searchId,
             messages: this.state.messages,
         })
 
         const chatMsg = JSON.stringify(chat_msg)
-
-        console.log(chatMsg);
         axios.post('/api/ws/connect', { data: 'Hello WebSocket!' })
             .then(response => {
                 const socket = new WebSocket('ws://localhost:8088/ws?sessionId=' + response.data.data)
                 socket.addEventListener('open', () => {
                     socket.send(chatMsg);
-                    console.log(socket);
-                    console.log('WebSocket connected')
                 });
                 let flag = 0;
                 let role = '';
@@ -113,7 +102,6 @@ const actions = {
                             // console.log(choice);
                             let finish_reason = choice.finish_reason;
                             if(role === ''){
-                                console.log(delta)
                                 role = delta.role;
                             }else if (role !== ''){
                                 content = delta.content;
@@ -141,6 +129,8 @@ const actions = {
                         searchId: value.searchId,
                         messages: [returnMsg,]
                     }).then((res) => {
+                        // 关闭加载条
+                        context.commit('storeSendingMessage', false)
 
                     }).catch((err) => {
                         this.state.that.$message.error({

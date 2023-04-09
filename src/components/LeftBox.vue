@@ -8,10 +8,10 @@
     </div>
     <div class="scrollbox">
       <v-subheader>CONVERSATIONS</v-subheader>
-      <vue-scroll ref="vs" :ops="ops" v-loading="loading" >
+      <vue-scroll ref="vs" :ops="ops" v-loading="loading" style="height: 90%" >
           <v-list rounded dense>
             <v-list-item-group v-model="item" color="primary">
-              <v-list-item v-for="(item, i) in reverseConversationlist" :key="item.searchId" @click.stop="getMessages(item.searchId)">
+              <v-list-item v-for="(item, i) in reverseConversationlist" :key="i" @click.stop="getMessages(item.searchId)">
                 <v-list-item-content>
                   <v-list-item-title v-text="">{{item.describe|silce}}</v-list-item-title>
                 </v-list-item-content>
@@ -46,6 +46,7 @@ export default {
   name: "left-box",
   data(){
     return {
+      reverseConversationlist: [],
       item: null,
       loading: false,
       ops: {
@@ -64,7 +65,6 @@ export default {
   filters:{
     silce(value)
     {
-      console.log(value)
       if (value.length > 10) {
         return value.toString().substring(0, 10) + '...'
       } else {
@@ -75,13 +75,21 @@ export default {
   methods:{
     newChat()
     {
-      this.item = 1;
-      this.$store.state.conversationlist.push({
-        searchId: '',
-        describe: 'new chat',
-        messages: []
-      })
-      this.getNewConversation();
+      if(!this.$store.state.newChat)
+      {
+        this.$store.state.conversationlist.push({
+          searchId: '',
+          describe: 'new chat',
+          messages: []
+        })
+        this.getNewConversation();
+      }else
+      {
+        this.$message({
+          type: 'warning',
+          message: '已经开启了新对话'
+        });
+      }
     },
     deleteConversationMethod(searchId) {
       this.$confirm('此操作将删除该对话', '提示', {
@@ -135,10 +143,19 @@ export default {
     ...mapActions(['deleteConversation','getConversationlist','getMessages','getNewConversation','deleteAllConversation','logout']),
   },
   computed:{
-    reverseConversationlist() {
-      return this.conversationlist.reverse();
-    },
     ...mapState(['conversationlist']),
+  },
+  watch:{
+    conversationlist: {
+      handler: function (val, oldVal) {
+        this.reverseConversationlist = [];
+        for (let i = val.length - 1; i >= 0; i--) {
+          this.reverseConversationlist.push(val[i]);
+        }
+        this.item = 0;
+      },
+      deep: true
+    }
   },
   mounted() {
     this.getConversationlistMethod();

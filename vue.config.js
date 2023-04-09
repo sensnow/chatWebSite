@@ -3,7 +3,7 @@ module.exports = defineConfig({
   transpileDependencies: [
     'vuetify'
   ],
-   publicPath: '/',
+   publicPath: './',
   lintOnSave: false,
   devServer:{
     port:8087,

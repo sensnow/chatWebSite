@@ -25,8 +25,9 @@ export default {
        ...mapState(['searchId','newChat','sendingMessage'])
     },
     methods: {
-        ...mapActions(['sendMessage']),
-        send() {
+        ...mapActions(['sendMessage','getConversationlist']),
+        async send() {
+
             if(this.content == null || this.content == '')
             {
                 this.$message({
@@ -35,7 +36,6 @@ export default {
                 });
                 return
             }
-          console.log(this.newChat)
             if(this.searchId === ''&& !this.newChat)
             {
                 this.$message({
@@ -45,7 +45,7 @@ export default {
                 return
             }
             this.$store.commit('storeSendingMessage',true);
-            this.sendMessage({
+            await this.sendMessage({
               searchId: this.searchId,
               message:{
                 content: this.content,
@@ -53,8 +53,12 @@ export default {
               }
             })
             this.content = ''
+            this.$store.state.newChat = false;
+            await this.getConversationlist();
         }
+
     }
+
 
 }
 </script>
