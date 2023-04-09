@@ -128,15 +128,27 @@ const actions = {
                                         this.state.messages[this.state.messages.length - 1].content+=message.content;
                                     }
                                 }
-                                console.log(message);
+                                // console.log(message);
                             }
                         }
 
                     }
                 });
-                socket.onclose = function (event) {
-                    console.log('WebSocket closed')
-                }
+                socket.onclose = (()=>{
+                    // console.log('WebSocket closed');
+                    let returnMsg = this.state.messages[this.state.messages.length - 1]
+                    axios.post('/api/chat/saveConversation', {
+                        searchId: value.searchId,
+                        messages: [returnMsg,]
+                    }).then((res) => {
+
+                    }).catch((err) => {
+                        this.state.that.$message.error({
+                            message: '网络错误',
+                            type: 'error'
+                        })
+                    });
+                })
             })
             .catch(error => {
                 console.error(error)
