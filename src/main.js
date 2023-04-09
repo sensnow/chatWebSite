@@ -19,7 +19,7 @@ Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(vuescroll)
 
-axios.defaults.baseURL = 'http://43.156.61.92';
+axios.defaults.baseURL = process.env.BASE_URL;
 axios.defaults.timeout = 30000;
 const vue = new Vue({
   render: h => h(App),

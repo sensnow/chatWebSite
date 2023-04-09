@@ -28,7 +28,7 @@
          <i class="el-icon-delete"></i>
          <span style="margin-left: 10px">Clear All Conversation</span>
        </div>
-        <div @click.prevent="logout">
+        <div @click.prevent="logoutMethod">
         <i class="el-icon-switch-button"></i>
         <span style="margin-left: 10px" >Logout</span>
       </div>
@@ -73,6 +73,13 @@ export default {
     },
   },
   methods:{
+    logoutMethod()
+    {
+      this.$store.commit('storeMessages', []);
+      this.$store.commit('storeConversationlist', [])
+      this.$store.commit('storeSearchId', '')
+      this.logout();
+    },
     newChat()
     {
       if(!this.$store.state.newChat)
@@ -97,7 +104,11 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.deleteConversation(searchId);
+        if (searchId!=='')
+        {
+          this.deleteConversation(searchId);
+        }
+        this.getConversationlist();
         if(this.$store.state.searchId === searchId)
         {
           this.$store.commit('setSearchId','')
@@ -158,7 +169,19 @@ export default {
     }
   },
   mounted() {
+    this.conversationlist = [];
     this.getConversationlistMethod();
+    if(this.conversationlist.length === 0)
+    {
+      this.$store.commit('setSearchId','')
+      this.$store.commit('setMessages',[])
+      // 设置一个默认的对话
+      this.$store.state.conversationlist.push({
+        searchId: '',
+        describe: 'new chat',
+        messages: []
+      })
+    }
   }
 }
 </script>

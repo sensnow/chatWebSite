@@ -3,15 +3,14 @@ module.exports = defineConfig({
   transpileDependencies: [
     'vuetify'
   ],
-  publicPath: '/',
+  publicPath: process.env.PUBLIC_PATH,
   lintOnSave: false,
   devServer: {
-    port: 8088,
+    port: process.env.VUE_APP_PORT,
     open: true,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8088',
-        //target:'http://43.156.61.92:8088',
+        target: process.env.VUE_APP_TARGET_URL,
         changeOrigin: true,
         ws: true,
         pathRewrite: {
