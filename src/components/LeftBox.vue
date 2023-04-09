@@ -90,6 +90,11 @@ export default {
         type: 'warning'
       }).then(() => {
         this.deleteConversation(searchId);
+        if(this.$store.state.searchId === searchId)
+        {
+          this.$store.commit('setSearchId','')
+          this.$store.commit('setMessages',[])
+        }
         this.$message({
           type: 'success',
           message: '删除成功!',
@@ -108,6 +113,9 @@ export default {
         type: 'warning'
       }).then(() => {
         this.deleteAllConversation();
+        this.$store.commit('setConversationlist',[])
+        this.$store.commit('setMessages',[])
+        this.$store.commit('setSearchId','')
         this.$message({
           type: 'success',
           message: '删除成功!',

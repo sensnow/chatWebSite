@@ -47,7 +47,7 @@ export default {
             this.$store.commit('storeSendingMessage',true);
             this.sendMessage({
               searchId: this.searchId,
-              messages:{
+              message:{
                 content: this.content,
                 role: "user"
               }

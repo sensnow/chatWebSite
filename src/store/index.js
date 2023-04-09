@@ -64,22 +64,50 @@ const actions = {
     async sendMessage(context, value) {
 
         if(this.state.newChat){
-            await axios.get('/api/chat').then((res) => {
-                context.commit('changeSearchId',res.data.data)
-                context.commit('storeMessages', [])
-                value.searchId = this.state.searchId;
-            }).catch((err) => {
-                this.state.that.$message.error({
-                    message: '获取对话失败',
-                    type: 'error'
+            if(this.state.newChat){
+                await axios.get('/api/chat').then((res) => {
+                    context.commit('changeSearchId',res.data.data)
+                    context.commit('storeMessages', [])
+                    value.searchId = this.state.searchId;
+                }).catch((err) => {
+                    this.state.that.$message.error({
+                        message: '获取对话失败',
+                        type: 'error'
+                    })
                 })
-            })
+            }
         }
         context.commit('addMessage', value.messages);
-        await axios.post('/api/chat', {
-            searchId: value.searchId,
-            messages: this.state.messages
-        }).then(async res=>{
+        const data = {
+            searchId: this.$store.state.searchId,
+            messages: this.$store.state.messages
+        }
+        await axios.post('/api/ws/connect',  { data: 'Hello WebSocket!' }).then(async res=>{
+            const socket = new WebSocket("ws://localhost:8088/api/ws/connect");
+            socket.addEventListener('open', event =>  {
+                socket.send(JSON.stringify(data));
+            });
+            this.state.that.$message.success({
+                message: '发送消息成功',
+                type: 'success'
+            })
+            let flag = 0;
+            socket.addEventListener('message', event => {
+                const data = event.data;
+                if(data === "[DONE]") {
+                    socket.close();
+                }else
+                {
+                    if(flag === 0){
+                        const message = {
+                            content: data.content,
+                            role: data.role,
+                        }
+                        this.$store.state.messages.push(message);
+                    }
+                    this.$set(this.$store.state.messages[this.$store.state.messages.length-1],'content' , ''+this.$store.state.messages[this.$store.state.messages.length-1]+data.content);
+                }
+            })
             context.commit('addMessage', res.data.data)
             if(this.state.newChat){
                 const response = await axios.get('/api/chat/conversationlist');
