@@ -79,9 +79,9 @@ const actions = {
         })
 
         const chatMsg = JSON.stringify(chat_msg)
-        axios.post('/api/ws/connect', { data: 'Hello WebSocket!' })
+        axios.post('/api/ws/connect', { data: value.searchId })
             .then(response => {
-                const socket = new WebSocket('ws://localhost:8088/ws?sessionId=' + response.data.data)
+                const socket = new WebSocket('ws://43.156.61.92:8088/ws?sessionId=' + response.data.data)
                 socket.addEventListener('open', () => {
                     socket.send(chatMsg);
                 });

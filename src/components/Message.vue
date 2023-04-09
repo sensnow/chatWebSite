@@ -126,4 +126,22 @@ button:hover {
   word-wrap: break-word;
 }
 
+
+.user-bubble .markdown-body {
+    color: white !important
+}
+
+.bot-bubble .markdown-body {
+    color: black !important;
+}
+
+.user-bubble .md-body {
+    color: white !important;
+}
+
+.bot-bubble .md-body {
+    color: black !important;
+}
+
+
 </style>

@@ -32,8 +32,8 @@ export default {
 <style scoped>
 .user-bubble {
     display: block;
-    background-color: #00BFFF;
-    color: red;
+    background-color: #3858D1;
+    color: white;
     text-align: right;
     align-self: flex-end;
     max-width: 70%;
@@ -46,6 +46,14 @@ export default {
     align-self: flex-start;
     max-width: 70%;
     border: 1px solid #e6e6e6;
+}
+
+.user-bubble .markdown-body {
+    color: white;
+}
+
+.bot-bubble .markdown-body {
+    color: black;
 }
 
 </style>
