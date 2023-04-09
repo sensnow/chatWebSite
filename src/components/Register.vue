@@ -46,7 +46,7 @@ import axios  from "axios";
 import {waitFor} from "@babel/core/lib/gensync-utils/async";
 export default {
 
-  name: "login-box",
+  name: "register-box",
   data() {
     let validatePass = (rule, value, callback) => {
       if (value === '') {
@@ -130,7 +130,7 @@ export default {
               });
               this.$router.push(
                   {
-                    path: "/login",
+                    path: "/user/login",
                   }
               )
             }else {
@@ -158,7 +158,7 @@ export default {
     haveAccount() {
       this.$router.push(
           {
-            path: "/login",
+            path: "/user/login",
           }
       )
     },

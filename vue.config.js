@@ -3,17 +3,20 @@ module.exports = defineConfig({
   transpileDependencies: [
     'vuetify'
   ],
+   //publicPath: './',
   lintOnSave: false,
-  devServer: {
-    proxy: {
-        '/api': {
-            target: 'http://43.156.61.92:8088',
-            changeOrigin: true,
-            pathRewrite: {
-                '^/api': ''
-            }
+  devServer:{
+    port:8087,
+    open:true,
+    proxy:{
+        '/api':{
+            target:'http://43.156.61.92',
+               changeOrigin:true,
+                ws:true,
+                pathRewrite:{
+                    '^/api':''
+                }
         }
     }
-  },
-  publicPath: './'
+  }
 })

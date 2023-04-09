@@ -15,8 +15,8 @@
                 <v-list-item-content>
                   <v-list-item-title v-text="">{{item.describe|silce}}</v-list-item-title>
                 </v-list-item-content>
-                <v-list-item-icon @click="deleteConversation(item.searchId)">
-                  <v-icon >mdi-delete</v-icon>
+                <v-list-item-icon @click="deleteConversationMethod(item.searchId)">
+                  <i class="el-icon-delete" style="align-self: center;align-items: center"></i>
                 </v-list-item-icon>
               </v-list-item>
             </v-list-item-group>
@@ -24,7 +24,7 @@
       </vue-scroll>
     </div>
     <div class="functionBox">
-       <div @click.prevent="deleteAllConversation">
+       <div @click.prevent="deleteAllConversationMethod">
          <i class="el-icon-delete"></i>
          <span style="margin-left: 10px">Clear All Conversation</span>
        </div>
@@ -75,7 +75,49 @@ export default {
   methods:{
     newChat()
     {
+      this.item = 1;
+      this.$store.state.conversationlist.push({
+        searchId: '',
+        describe: 'new chat',
+        messages: []
+      })
       this.getNewConversation();
+    },
+    deleteConversationMethod(searchId) {
+      this.$confirm('此操作将删除该对话', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteConversation(searchId);
+        this.$message({
+          type: 'success',
+          message: '删除成功!',
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+    });
+    },
+    deleteAllConversationMethod() {
+      this.$confirm('此操作将删除全部对话', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteAllConversation();
+        this.$message({
+          type: 'success',
+          message: '删除成功!',
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     },
     async getConversationlistMethod() {
       this.loading = true;

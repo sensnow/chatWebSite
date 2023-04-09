@@ -136,7 +136,7 @@ export default {
     noAccount() {
       this.$router.push(
         {
-          path: "/register",
+          path: "/user/register",
         }
       )
     },
