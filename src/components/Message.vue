@@ -57,7 +57,7 @@ export default {
 
   },
   mounted() {
-    this.messages = [];
+    this.$store.state.messages = [];
   }
 
 }

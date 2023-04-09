@@ -168,21 +168,21 @@ export default {
       deep: true
     }
   },
-  mounted() {
-    this.conversationlist = [];
-    this.getConversationlistMethod();
-    if(this.conversationlist.length === 0)
-    {
-      this.$store.commit('setSearchId','')
-      this.$store.commit('setMessages',[])
-      // 设置一个默认的对话
-      this.$store.state.conversationlist.push({
-        searchId: '',
-        describe: 'new chat',
-        messages: []
-      })
-    }
+  async mounted() {
+    this.$store.state.conversationlist = [];
+    await this.getConversationlistMethod();
+    this.$store.state.searchId = '';
+    this.$store.state.messages = [];
+    // 设置一个默认的对话
+    this.$store.state.newChat = true;
+    this.$store.state.conversationlist.push({
+      searchId: '',
+      describe: 'new chat',
+      messages: []
+    })
+    this.item = 0;
   }
+
 }
 </script>
 
