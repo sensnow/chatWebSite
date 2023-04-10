@@ -21,6 +21,9 @@ export default {
             }
         }
     },
+  beforeDestroy() {
+    this.$store.state.socket.close();
+  },
 
   computed:{
        ...mapState(['searchId','newChat','sendingMessage'])
@@ -29,7 +32,7 @@ export default {
         ...mapActions(['sendMessage','getConversationlist']),
         async send() {
 
-            if(this.content == null || this.content == '')
+            if(this.content == null || this.content.trim() === '')
             {
                 this.$message({
                     message: '请输入内容',

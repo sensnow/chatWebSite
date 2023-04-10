@@ -85,54 +85,19 @@ const actions = {
             searchId: value.searchId,
             messages: this.state.messages,
         })
-
         const chatMsg = JSON.stringify(chat_msg)
-        axios.post('/api/ws/connect', { data: value.searchId })
-            .then(response => {
-                const socket = new WebSocket('wss://chat.wenshijiannan.cn/ws?sessionId=' + response.data.data)
-                socket.addEventListener('open', () => {
-                    socket.send(chatMsg);
-                });
-                let flag = 0;
-                let role = '';
-                let content = '';
-                socket.addEventListener('message', event => {
-                    const eventData = event.data;
-                    if(eventData === "data: [DONE]"){
-                        socket.close();
-                    }else {
-                        this.state.downMarkdown = true;
-                        let MsgData = eventData;
-                        if(MsgData.indexOf('data: ') !== -1){
-                            MsgData = MsgData.split('data: ')[1];
-                            let message = JSON.parse(MsgData);
-                            let choice = message.choices[0];
-                            let delta = choice.delta;
-                            // console.log(choice);
-                            let finish_reason = choice.finish_reason;
-                            if(role === ''){
-                                role = delta.role;
-                            }else if (role !== ''){
-                                content = delta.content;
-                                message = new Object({
-                                    content: content,
-                                    role: role,
-                                })
-                                if(flag++ === 0){
-                                    this.state.messages.push(message);
-                                }else {
-                                    if(message.content !== undefined){
-                                        this.state.messages[this.state.messages.length - 1].content+=message.content;
-                                    }
-                                }
-                                // console.log(message);
-                            }
-                        }
+        let flag = 0;
 
-                    }
-                });
-                socket.onclose = (()=>{
-                    // console.log('WebSocket closed');
+        if(this.state.socket == null){
+            this.state.socket = new WebSocket('wss://chat.wenshijiannan.cn/ws');
+            // this.state.socket = new WebSocket('ws://127.0.0.1:8088/ws');
+            // console.log("创建新socket")
+            let role = '';
+            let content = '';
+            this.state.socket.addEventListener('message', event => {
+                const eventData = event.data;
+                if(eventData === "data: [DONE]"){
+                    flag = 0;
                     let returnMsg = this.state.messages[this.state.messages.length - 1]
                     axios.post('/api/chat/saveConversation', {
                         searchId: value.searchId,
@@ -149,11 +114,48 @@ const actions = {
                             type: 'error'
                         })
                     });
-                })
-            })
-            .catch(error => {
-                console.error(error)
+                }else {
+                    this.state.downMarkdown = true;
+                    let MsgData = eventData;
+                    if(MsgData.indexOf('data: ') !== -1){
+                        MsgData = MsgData.split('data: ')[1];
+                        let message = JSON.parse(MsgData);
+                        let choice = message.choices[0];
+                        let delta = choice.delta;
+                        let finish_reason = choice.finish_reason;
+                        if(role === ''){
+                            role = delta.role;
+                        }else if (role !== ''){
+                            content = delta.content;
+                            if(content === undefined){
+                                content = '';
+                            }
+                            message = new Object({
+                                content: content,
+                                role: role,
+                            })
+                            if(flag++ === 0){
+                                this.state.messages.push(message);
+                            }else {
+                                if(message.content !== undefined){
+                                    this.state.messages[this.state.messages.length - 1].content+=message.content;
+                                }
+                            }
+                            // console.log(message);
+                        }
+                    }
+
+                }
             });
+            // 开始发送消息
+            this.state.socket.addEventListener('open', event => {
+                this.state.socket.send(chatMsg);
+                console.log("发送消息")
+            });
+        }else {
+            this.state.socket.send(chatMsg);
+            console.log("发送消息")
+        }
 
     },
     async deleteAllConversation(context) {
@@ -224,6 +226,7 @@ const state = {
     sendingMessage: false,
     that: '',
     downMarkdown: false, // 接收数据时，下滑到最底部
+    socket: null,
 }
 
 const getters = {
