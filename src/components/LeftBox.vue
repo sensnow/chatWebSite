@@ -15,7 +15,7 @@
                 <v-list-item-content>
                   <v-list-item-title v-text="">{{item.describe|silce}}</v-list-item-title>
                 </v-list-item-content>
-                <v-list-item-icon @click="deleteConversationMethod(item.searchId)">
+                <v-list-item-icon @click.stop="deleteConversationMethod(item.searchId)">
                   <i class="el-icon-delete" style="align-self: center;align-items: center"></i>
                 </v-list-item-icon>
               </v-list-item>
@@ -111,8 +111,9 @@ export default {
         this.getConversationlist();
         if(this.$store.state.searchId === searchId)
         {
-          this.$store.commit('setSearchId','')
-          this.$store.commit('setMessages',[])
+          this.$store.commit('storeSearchId','')
+          this.$store.commit('storeMessages',[])
+          this.$store.commit('storeNewChat',true)
         }
         this.$message({
           type: 'success',
