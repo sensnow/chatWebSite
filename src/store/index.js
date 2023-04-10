@@ -39,6 +39,10 @@ const actions = {
     // 请求消息数据
     async getMessages(context,value)
     {
+        if(value===this.state.searchId)
+        {
+            return
+        }
         if (value === null || value === '')
         {
             context.commit('storeMessages',[])

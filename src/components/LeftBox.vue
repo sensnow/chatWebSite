@@ -9,7 +9,7 @@
     <div class="scrollbox">
       <v-subheader>CONVERSATIONS</v-subheader>
       <vue-scroll ref="vs" :ops="ops" v-loading="loading" style="height: 90%" >
-          <v-list rounded dense>
+          <v-list rounded dense :disabled="sendingMessage">
             <v-list-item-group v-model="item" color="primary">
               <v-list-item v-for="(item, i) in reverseConversationlist" :key="i" @click.stop="getMessages(item.searchId)">
                 <v-list-item-content>
@@ -154,7 +154,7 @@ export default {
     ...mapActions(['deleteConversation','getConversationlist','getMessages','getNewConversation','deleteAllConversation','logout']),
   },
   computed:{
-    ...mapState(['conversationlist']),
+    ...mapState(['conversationlist','sendingMessage']),
   },
   watch:{
     conversationlist: {
@@ -210,14 +210,19 @@ export default {
   width: 100%;
   height: 10%;
   margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   border: 1px;
   border-radius: 12px;
 }
 .functionBox div{
-  width: 100%;
+  width: 90%;
   height: 30px;
   display: block;
   margin: 5px 0;
+  font-size: 12px;
   line-height: 30px;
   border: 1px black solid;
   border-radius: 5px;

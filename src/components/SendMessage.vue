@@ -1,6 +1,6 @@
 <template>
     <el-form @submit="send" class="main" :rules="rules" @submit.n.native.prevent @keyup.enter="send">
-            <el-input type="text" v-loading="sendingMessage" :disabled="sendingMessage" prop="content" class="input-box" v-model="content" />
+            <el-input type="text" v-loading="sendingMessage" :disabled="sendingMessage" prop="content" class="input-box" v-model.trim="content" />
             <el-button native-type="submit" class="submit_btn" icon="el-icon-position" @click="send" />
     </el-form>
 </template>
