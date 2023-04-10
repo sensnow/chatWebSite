@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="formdata">
-      <el-form ref="form" :model="form" :rules="rules">
+      <el-form ref="form" :model="form" :rules="rules" @keyup.enter.native="login('form')">
         <el-form-item prop="username">
           <el-input
                   v-model="form.username"

@@ -173,14 +173,7 @@ export default {
     await this.getConversationlistMethod();
     this.$store.state.searchId = '';
     this.$store.state.messages = [];
-    // 设置一个默认的对话
-    this.$store.state.newChat = true;
-    this.$store.state.conversationlist.push({
-      searchId: '',
-      describe: 'new chat',
-      messages: []
-    })
-    this.item = 0;
+    this.item = null;
   }
 
 }

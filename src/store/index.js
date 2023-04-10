@@ -39,6 +39,14 @@ const actions = {
     // 请求消息数据
     async getMessages(context,value)
     {
+        if (value === null || value === '')
+        {
+            context.commit('storeMessages',[])
+            context.commit('storeSearchId','')
+            context.commit('storeNewChat', true);
+            return
+        }
+
         context.commit('storeMessageloading', true)
         context.commit('storeSearchId', value);
         context.commit('storeNewChat', false);
@@ -49,7 +57,6 @@ const actions = {
         }).then((res) => {
             context.commit('storeMessages', res.data.data)
             context.commit('storeMessageloading', false)
-
         }).catch((err) => {
             this.state.that.$message.error({
                 message: '获取对话失败',
@@ -82,7 +89,7 @@ const actions = {
         const chatMsg = JSON.stringify(chat_msg)
         axios.post('/api/ws/connect', { data: value.searchId })
             .then(response => {
-                const socket = new WebSocket('ws://43.156.61.92:8088/ws?sessionId=' + response.data.data)
+                const socket = new WebSocket('wss://chat.wenshijiannan.cn/ws?sessionId=' + response.data.data)
                 socket.addEventListener('open', () => {
                     socket.send(chatMsg);
                 });
@@ -133,8 +140,10 @@ const actions = {
                     }).then((res) => {
                         // 关闭加载条
                         context.commit('storeSendingMessage', false)
-                        this.$store.state.downMarkdown = false;
+                        this.state.downMarkdown = false;
                     }).catch((err) => {
+                        context.commit('storeSendingMessage', false)
+                        this.state.downMarkdown = false;
                         this.state.that.$message.error({
                             message: '网络错误',
                             type: 'error'
@@ -210,7 +219,7 @@ const state = {
     conversationlist: [],
     messages: [],
     searchId: '',
-    newChat: false,
+    newChat: true,
     messageloading: false,
     sendingMessage: false,
     that: '',

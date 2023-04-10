@@ -21,7 +21,8 @@ export default {
             }
         }
     },
-    computed:{
+
+  computed:{
        ...mapState(['searchId','newChat','sendingMessage'])
     },
     methods: {
@@ -36,14 +37,11 @@ export default {
                 });
                 return
             }
-            if(this.searchId === ''&& !this.newChat)
+            if(this.searchId==='')
             {
-                this.$message({
-                    message: '请先选择或创建一个对话',
-                    type: 'warning'
-                });
-                return
+              this.$store.commit('storeNewChat',true);
             }
+
             this.$store.commit('storeSendingMessage',true);
             await this.sendMessage({
               searchId: this.searchId,
