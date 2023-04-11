@@ -1,8 +1,8 @@
 <template>
-    <el-form @submit="send" class="main" :rules="rules" @submit.n.native.prevent @keyup.enter="send">
-            <el-input type="text" v-loading="sendingMessage" :disabled="sendingMessage" prop="content" class="input-box" v-model.trim="content" />
-            <el-button native-type="submit" class="submit_btn" icon="el-icon-position" @click="send" />
-    </el-form>
+      <el-form @submit="send" class="main" :rules="rules" @submit.n.native.prevent @keyup.enter="send">
+        <el-input type="text" v-loading="sendingMessage" :disabled="sendingMessage" prop="content" class="input-box" v-model="content" />
+        <el-button native-type="submit" class="submit_btn" icon="el-icon-position" @click="send" />
+      </el-form>
 </template>
 
 <script>
@@ -31,7 +31,6 @@ export default {
     methods: {
         ...mapActions(['sendMessage','getConversationlist']),
         async send() {
-
             if(this.content == null || this.content.trim() === '')
             {
                 this.$message({
@@ -44,8 +43,9 @@ export default {
             {
               this.$store.commit('storeNewChat',true);
             }
-
             this.$store.commit('storeSendingMessage',true);
+            // 清掉空格
+            this.content = this.content.trim();
             await this.sendMessage({
               searchId: this.searchId,
               message:{
@@ -56,6 +56,7 @@ export default {
             this.content = ''
             this.$store.state.newChat = false;
             await this.getConversationlist();
+            // 出现regenerate response
         }
 
     }
@@ -91,7 +92,10 @@ export default {
     display: block;
     width:5%;
 }
-
+.response{
+  position: relative;
+  top: -60%;
+}
 
 
 </style>

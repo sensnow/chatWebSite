@@ -69,22 +69,7 @@ const actions = {
         });
 
     },
-    // 发送消息
-    async sendMessage(context, value) {
-
-        if(this.state.newChat){
-            await axios.get('/api/chat').then((res) => {
-                context.commit('changeSearchId',res.data.data)
-                context.commit('storeMessages', [])
-                value.searchId = this.state.searchId;
-            }).catch((err) => {
-                this.state.that.$message.error({
-                    message: '获取对话失败',
-                    type: 'error'
-                })
-            })
-        }
-        context.commit('addMessage', value.message);
+    async sendAll(context,value) {
         const chat_msg = new Object({
             searchId: value.searchId,
             messages: this.state.messages,
@@ -152,15 +137,48 @@ const actions = {
                 }
             });
             // 开始发送消息
-            this.state.socket.addEventListener('open', event => {
-                this.state.socket.send(chatMsg);
-                console.log("发送消息")
-            });
+           try {
+               this.state.socket.addEventListener('open', event => {
+                   this.state.socket.send(chatMsg);
+               });
+           }catch (e){
+               this.state.that.$message.error({
+                   message: '网络错误，请刷新页面',
+                   type: 'error'
+               });
+           }
         }else {
-            this.state.socket.send(chatMsg);
-            console.log("发送消息")
+            // 如果连接失败,刷新页面
+            try {
+                this.state.socket.send(chatMsg);
+            }catch (e){
+                this.state.that.$message.error({
+                    message: '网络错误，请刷新页面',
+                    type: 'error'
+                });
+            }
         }
+    },
+    // 发送消息
+    async sendMessage(context, value) {
 
+        if(this.state.newChat){
+            await axios.get('/api/chat').then((res) => {
+                context.commit('changeSearchId',res.data.data)
+                context.commit('storeMessages', [])
+                value.searchId = this.state.searchId;
+            }).catch((err) => {
+                this.state.that.$message.error({
+                    message: '获取对话失败',
+                    type: 'error'
+                })
+            })
+        }
+        context.commit('addMessage', value.message);
+        await this.dispatch('sendAll',value)
+    },
+    async regenerateMessage(context,value) {
+        await this.dispatch('sendAll',value)
     },
     async deleteAllConversation(context) {
         await axios.delete('/api/chat/allconversation').then(async (res) => {
@@ -218,6 +236,9 @@ const mutations = {
     },
     storeThat(state, value) {
         state.that = value;
+    },
+    storeShowRegenerate(state, value) {
+        state.showRegenerate = value;
     }
 }
 //准备state——用于存储数据
@@ -231,6 +252,7 @@ const state = {
     that: '',
     downMarkdown: false, // 接收数据时，下滑到最底部
     socket: null,
+    showRegenerate: false,
 }
 
 const getters = {

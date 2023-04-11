@@ -10,6 +10,9 @@
           />
         </div>
     </vue-scroll>
+    <transition name=".el-zoom-in-center">
+      <el-button class="regenerate" :disabled="isAble" icon="el-icon-refresh" v-show="false" @click="regenerateBtn">Regenerate response</el-button>
+    </transition>
   </div>
 </template>
 
@@ -18,6 +21,7 @@ import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import vuescroll from "vuescroll";
 import axios from "axios";
 import Vue from "vue";
+import sendMessage from "@/components/SendMessage.vue";
 export default {
   components:{
     vuescroll,
@@ -36,15 +40,27 @@ export default {
         bar: {
           opacity: 0,
         }
-      }
+      },
+      isAble: false,
   }
   },
 
   name: "message-box",
   computed: {
-    ...mapState(['messages','messageloading','downMarkdown']),
+    ...mapState(['messages','messageloading','downMarkdown','showRegenerate','searchId']),
   },
   methods:{
+    async regenerateBtn()
+    {
+      this.isAble = true;
+      this.$store.commit('storeSendingMessage',true);
+      let object = {
+        searchId: this.searchId,
+      }
+      await this.regenerateMessage(object);
+      this.isAble = false;
+      this.$store.commit('storeSendingMessage',false);
+    },
     handleResize() {
       this.$nextTick(() => {
         if(this.$store.state.downMarkdown===true)
@@ -57,7 +73,7 @@ export default {
         }
       })
     },
-
+  ...mapActions(['regenerateMessage'])
   },
   mounted() {
     this.$store.state.messages = [];
@@ -146,6 +162,17 @@ button:hover {
 .bot-bubble .md-body {
     color: black !important;
 }
-
+.regenerate{
+  position: relative;
+  bottom: 7%;
+  background-color: rgba(255,255,255);;
+  color: rgba(64,65,79);
+  border: 1px solid rgba(0,0,0,.1);
+  font: 1px black solid;
+  font-family: "Microsoft YaHei",serif;
+}
+.regenerate:hover{
+  background: lightgray;
+}
 
 </style>
