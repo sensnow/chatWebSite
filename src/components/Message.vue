@@ -11,7 +11,7 @@
         </div>
     </vue-scroll>
     <transition name=".el-zoom-in-center">
-      <el-button class="regenerate" :disabled="isAble" icon="el-icon-refresh" v-show="false" @click="regenerateBtn">Regenerate response</el-button>
+      <el-button class="regenerate" :disabled="this.$store.state.messageloading" icon="el-icon-refresh" v-show="this.$store.state.messages.length!==0" @click="regenerateBtn">Regenerate response</el-button>
     </transition>
   </div>
 </template>
@@ -57,6 +57,7 @@ export default {
       let object = {
         searchId: this.searchId,
       }
+
       await this.regenerateMessage(object);
       this.isAble = false;
       this.$store.commit('storeSendingMessage',false);

@@ -78,8 +78,8 @@ const actions = {
         let flag = 0;
 
         if(this.state.socket == null){
-            this.state.socket = new WebSocket('wss://chat.wenshijiannan.cn/ws');
-            // this.state.socket = new WebSocket('ws://127.0.0.1:8088/ws');
+            // this.state.socket = new WebSocket('wss://chat.wenshijiannan.cn/ws');
+            this.state.socket = new WebSocket('ws://127.0.0.1:8088/ws');
             // console.log("创建新socket")
             let role = '';
             let content = '';
@@ -137,19 +137,18 @@ const actions = {
                 }
             });
             // 开始发送消息
-           try {
-               this.state.socket.addEventListener('open', event => {
-                   this.state.socket.send(chatMsg);
-               });
-           }catch (e){
-               this.state.that.$message.error({
-                   message: '网络错误，请刷新页面',
-                   type: 'error'
-               });
-           }
+            if(this.state.messages[this.state.messages.length-1].role === 'assistant'){
+                this.state.messages.pop();
+            }
+            this.state.socket.addEventListener('open', event => {
+                this.state.socket.send(chatMsg);
+            });
         }else {
             // 如果连接失败,刷新页面
             try {
+                if(this.state.messages[this.state.messages.length-1].role === 'assistant'){
+                    this.state.messages.pop();
+                }
                 this.state.socket.send(chatMsg);
             }catch (e){
                 this.state.that.$message.error({
