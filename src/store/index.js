@@ -78,8 +78,8 @@ const actions = {
         let flag = 0;
 
         if(this.state.socket == null){
-            // this.state.socket = new WebSocket('wss://chat.wenshijiannan.cn/ws');
-            this.state.socket = new WebSocket('ws://127.0.0.1:8088/ws');
+            this.state.socket = new WebSocket('wss://chat.wenshijiannan.cn/ws');
+            // this.state.socket = new WebSocket('ws://127.0.0.1:8088/ws');
             // console.log("创建新socket")
             let role = '';
             let content = '';
