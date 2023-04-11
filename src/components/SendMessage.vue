@@ -45,7 +45,7 @@ export default {
             }
             this.$store.commit('storeSendingMessage',true);
             // 清掉空格
-            this.content = this.content.trim();
+            // this.content = this.content.trim();
             await this.sendMessage({
               searchId: this.searchId,
               message:{

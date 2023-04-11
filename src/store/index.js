@@ -144,27 +144,25 @@ const actions = {
                 this.state.socket.send(chatMsg);
             });
         }else {
-            // 如果连接失败,刷新页面
-            try {
-                if(this.state.messages[this.state.messages.length-1].role === 'assistant'){
-                    this.state.messages.pop();
-                }
-                this.state.socket.send(chatMsg);
-            }catch (e){
-                this.state.that.$message.error({
-                    message: '网络错误，请刷新页面',
-                    type: 'error'
-                });
+            if (this.state.socket.readyState === WebSocket.CLOSED) {
+                this.$message.error({
+                    message:"网络错误，请刷新页面"
+                })
             }
+            // 如果连接失败,刷新页面
+            if(this.state.messages[this.state.messages.length-1].role === 'assistant'){
+                this.state.messages.pop();
+            }
+            this.state.socket.send(chatMsg);
         }
     },
     // 发送消息
     async sendMessage(context, value) {
-
+        context.commit('addMessage', value.message);
         if(this.state.newChat){
             await axios.get('/api/chat').then((res) => {
                 context.commit('changeSearchId',res.data.data)
-                context.commit('storeMessages', [])
+                // context.commit('storeMessages', [])
                 value.searchId = this.state.searchId;
             }).catch((err) => {
                 this.state.that.$message.error({
@@ -173,7 +171,6 @@ const actions = {
                 })
             })
         }
-        context.commit('addMessage', value.message);
         await this.dispatch('sendAll',value)
     },
     async regenerateMessage(context,value) {
