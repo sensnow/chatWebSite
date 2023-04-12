@@ -145,9 +145,11 @@ const actions = {
             });
         }else {
             if (this.state.socket.readyState === WebSocket.CLOSED) {
-                this.$message.error({
-                    message:"网络错误，请刷新页面"
+                this.state.that.$message.error({
+                    message: '网络错误，请刷新当前页面',
+                    type: 'error'
                 })
+                return;
             }
             // 如果连接失败,刷新页面
             if(this.state.messages[this.state.messages.length-1].role === 'assistant'){
