@@ -77,7 +77,8 @@ const actions = {
         const chatMsg = JSON.stringify(chat_msg)
         let flag = 0;
 
-        if(this.state.socket == null){
+        if(this.state.socket == null || this.state.socket.readyState === WebSocket.CLOSED){
+            this.state.scoket = null;
             this.state.socket = new WebSocket('wss://chat.wenshijiannan.cn/ws');
             // this.state.socket = new WebSocket('ws://127.0.0.1:8088/ws');
             // console.log("创建新socket")
