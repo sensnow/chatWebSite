@@ -43,6 +43,10 @@ const actions = {
         {
             return
         }
+        if(this.state.socket!==null && this.state.socket.readyState !== WebSocket.CLOSED){
+            this.state.socket.close();
+        }
+        this.state.socket = null;
         if (value === null || value === '')
         {
             context.commit('storeMessages',[])
