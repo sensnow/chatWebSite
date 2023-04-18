@@ -175,7 +175,7 @@ button:hover {
   background-color: rgba(255,255,255);;
   color: rgba(64,65,79);
   border: 1px solid rgba(0,0,0,.1);
-  font: 1px black solid;
+  font: 12px black solid;
   font-family: "Microsoft YaHei",serif;
 }
 .regenerate:hover{
