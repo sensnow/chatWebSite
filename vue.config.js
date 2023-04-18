@@ -3,7 +3,7 @@ module.exports = defineConfig({
   transpileDependencies: [
     'vuetify'
   ],
-  publicPath: process.env.PUBLIC_PATH,
+  publicPath: './',
   lintOnSave: false,
   devServer: {
     port: process.env.VUE_APP_PORT,

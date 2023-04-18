@@ -97,7 +97,7 @@ export default {
           setTimeout(() => {
             this.loading = false;
           }, 3000);
-          await axios.post("/api/user/login", {
+          await axios.post("https://chat.wenshijiannan.cn/api/user/login", {
             userName: this.form.username,
             password: this.form.password,
           })

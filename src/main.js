@@ -21,7 +21,8 @@ Vue.use(Vuex)
 Vue.use(vuescroll)
 Vue.use(VueClipboard);
 
-axios.defaults.baseURL = process.env.BASE_URL;
+
+axios.defaults.baseURL = 'https://chat.wenshijiannan.cn';
 axios.defaults.timeout = 30000;
 const vue = new Vue({
   render: h => h(App),
